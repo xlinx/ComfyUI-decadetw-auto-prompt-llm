@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ### Quick Links
+=======
+# ComfyUI-decadetw-auto-prompt-llm
+>>>>>>> 64cc5cfb8a77d1fb667ce2feeddaeb58b6f11ff0
 
 * Auto prompt by LLM and LLM-Vision (Trigger more details out inside model) 
     * sd-web-ui: https://github.com/xlinx/sd-webui-decadetw-auto-prompt-llm

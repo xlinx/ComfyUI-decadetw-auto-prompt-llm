@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 ### Quick Links
-=======
-# ComfyUI-decadetw-auto-prompt-llm
->>>>>>> 64cc5cfb8a77d1fb667ce2feeddaeb58b6f11ff0
 
 * Auto prompt by LLM and LLM-Vision (Trigger more details out inside model) 
     * sd-web-ui: https://github.com/xlinx/sd-webui-decadetw-auto-prompt-llm
@@ -12,7 +8,8 @@
   * ComfyUI:  https://github.com/xlinx/ComfyUI-decadetw-auto-messaging-realtime
 <hr/>
 
-# sd-webui-decadetw-auto-prompt-llm
+# ComfyUI-decadetw-auto-prompt-llm
+
 <hr/>
 
 <p align="center">
@@ -244,6 +241,10 @@ security issue, but u can consider as follows.
 * https://github.com/adieyal/sd-dynamic-prompts
 * https://en.wikipedia.org/wiki/Server-side_request_forgery
 * and Command Line Arg --allow-code
+
+## Buy me a Coca cola ☕
+
+>>>>>>>>https://buymeacoffee.com/xxoooxx
 
 ## Colophon
 

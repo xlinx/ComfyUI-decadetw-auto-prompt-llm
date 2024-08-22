@@ -1,0 +1,883 @@
+{
+  "last_node_id": 73,
+  "last_link_id": 193,
+  "nodes": [
+    {
+      "id": 4,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -407,
+        -23
+      ],
+      "size": {
+        "0": 314.8163757324219,
+        "1": 145.42518615722656
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "onTrigger",
+          "type": -1,
+          "link": null,
+          "optional": true,
+          "nameLocked": true,
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            181
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [],
+          "slot_index": 2
+        },
+        {
+          "name": "onExecuted",
+          "type": -1,
+          "links": null,
+          "optional": true,
+          "nameLocked": true,
+          "slot_index": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "a1cp\\keep\\fantasticmix_k2.safetensors"
+      ]
+    },
+    {
+      "id": 51,
+      "type": "ImageToBase64",
+      "pos": [
+        -385,
+        185
+      ],
+      "size": {
+        "0": 259.1164245605469,
+        "1": 246
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 125
+        }
+      ],
+      "outputs": [
+        {
+          "name": "base64Images",
+          "type": "STRING",
+          "links": [
+            160,
+            182
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageToBase64"
+      }
+    },
+    {
+      "id": 30,
+      "type": "VAELoader",
+      "pos": [
+        -23,
+        26
+      ],
+      "size": {
+        "0": 432.88714599609375,
+        "1": 61.58954620361328
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            52
+          ],
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "a1vae\\vae-ft-mse-840000-ema-pruned_fp16.pt"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "EmptyLatentImage",
+      "pos": [
+        92.36666870117188,
+        140
+      ],
+      "size": {
+        "0": 315,
+        "1": 106
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        768,
+        1024,
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [
+        456,
+        -30
+      ],
+      "size": {
+        "0": 315,
+        "1": 262
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 183
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 184,
+          "slot_index": 2
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        779362254428403,
+        "randomize",
+        24,
+        4,
+        "euler_ancestral",
+        "normal",
+        1
+      ]
+    },
+    {
+      "id": 9,
+      "type": "SaveImage",
+      "pos": [
+        441,
+        302
+      ],
+      "size": {
+        "0": 406.10931396484375,
+        "1": 813.83203125
+      },
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 64,
+      "type": "Show any [Crystools]",
+      "pos": [
+        884,
+        93
+      ],
+      "size": {
+        "0": 302.3999938964844,
+        "1": 181.25750732421875
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any_value",
+          "type": "*",
+          "link": 160,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Show any [Crystools]"
+      },
+      "widgets_values": [
+        false,
+        true,
+        ""
+      ]
+    },
+    {
+      "id": 60,
+      "type": "Show any [Crystools]",
+      "pos": [
+        869,
+        331
+      ],
+      "size": {
+        "0": 900,
+        "1": 190
+      },
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any_value",
+          "type": "*",
+          "link": 185,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Show any [Crystools]"
+      },
+      "widgets_values": [
+        false,
+        true,
+        ""
+      ]
+    },
+    {
+      "id": 70,
+      "type": "ImageToBase64",
+      "pos": [
+        1205,
+        18
+      ],
+      "size": {
+        "0": 259.1164245605469,
+        "1": 246
+      },
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 175
+        }
+      ],
+      "outputs": [
+        {
+          "name": "base64Images",
+          "type": "STRING",
+          "links": [
+            188
+          ],
+          "shape": 3,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageToBase64"
+      }
+    },
+    {
+      "id": 59,
+      "type": "Show any [Crystools]",
+      "pos": [
+        870,
+        570
+      ],
+      "size": {
+        "0": 900,
+        "1": 190
+      },
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any_value",
+          "type": "*",
+          "link": 186,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Show any [Crystools]"
+      },
+      "widgets_values": [
+        false,
+        true,
+        ""
+      ]
+    },
+    {
+      "id": 31,
+      "type": "Show any [Crystools]",
+      "pos": [
+        870,
+        810
+      ],
+      "size": {
+        "0": 900,
+        "1": 310
+      },
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any_value",
+          "type": "*",
+          "link": 187
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Show any [Crystools]"
+      },
+      "widgets_values": [
+        false,
+        true,
+        ""
+      ]
+    },
+    {
+      "id": 73,
+      "type": "Show any [Crystools]",
+      "pos": [
+        2009,
+        -136
+      ],
+      "size": {
+        "0": 900,
+        "1": 190
+      },
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any_value",
+          "type": "*",
+          "link": 191,
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Show any [Crystools]"
+      }
+    },
+    {
+      "id": 72,
+      "type": "Auto-MSG-ALL",
+      "pos": [
+        1486,
+        -165
+      ],
+      "size": {
+        "0": 493.8000183105469,
+        "1": 428
+      },
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "trigger_any_type",
+          "type": "*",
+          "link": null
+        },
+        {
+          "name": "trigger_append_text_prompt",
+          "type": "*",
+          "link": 192
+        },
+        {
+          "name": "trigger_append_text_image_base64",
+          "type": "*",
+          "link": 188
+        },
+        {
+          "name": "trigger_append_image",
+          "type": "IMAGE",
+          "link": 193,
+          "slot_index": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output-original-input",
+          "type": "STRING",
+          "links": [],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "🌀output-text-LINE",
+          "type": "STRING",
+          "links": [
+            191
+          ],
+          "shape": 3,
+          "slot_index": 1
+        },
+        {
+          "name": "🌀output-text-Telegram",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "🌀output-text-Discord",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Auto-MSG-ALL"
+      },
+      "widgets_values": [
+        true,
+        true,
+        true,
+        "tcnDSnAR6Gl6pTMBfQ4wOxqtq0eSyXqqJ9Q1Hck4dRO",
+        "[from-ComfyUI-line]",
+        "7376923093:AAGtCtd9Ogiq9yT1IBsbRD6ENQ5DbAqL6Ig",
+        "1967680189",
+        "[from-ComfyUI-telegram]",
+        "MTI3NDg3MTUzODk4NTczMDA1OQ.GeXmQU.e8N1Mv0lQ7aZ-_eOnxTqhLxNPxWcE60E_rMCDg",
+        "1274866471884816395",
+        "[from-ComfyUI-discord]"
+      ]
+    },
+    {
+      "id": 71,
+      "type": "Auto-LLM-Text-Vision",
+      "pos": [
+        -76,
+        313
+      ],
+      "size": {
+        "0": 473.1402893066406,
+        "1": 890.0000610351562
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 181
+        },
+        {
+          "name": "image_to_llm_vision",
+          "type": "*",
+          "link": 182
+        }
+      ],
+      "outputs": [
+        {
+          "name": "postive",
+          "type": "CONDITIONING",
+          "links": [
+            183
+          ],
+          "shape": 3
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            184
+          ],
+          "shape": 3
+        },
+        {
+          "name": "orignal-postive",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "orignal-negative",
+          "type": "STRING",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "🌀LLM-Text",
+          "type": "STRING",
+          "links": [
+            185
+          ],
+          "shape": 3
+        },
+        {
+          "name": "🌀LLM-Vision",
+          "type": "STRING",
+          "links": [
+            186
+          ],
+          "shape": 3
+        },
+        {
+          "name": "🌀postive+LLM-Text+LLM-Vision",
+          "type": "STRING",
+          "links": [
+            187,
+            192
+          ],
+          "shape": 3,
+          "slot_index": 6
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Auto-LLM-Text-Vision"
+      },
+      "widgets_values": [
+        true,
+        true,
+        "1girl,",
+        "",
+        true,
+        false,
+        "http://localhost:1234/v1",
+        "lm-studio",
+        "llama3.1",
+        50,
+        0.8,
+        "You are an AI prompt word engineer. Use the provided keywords to create a beautiful composition. Only the prompt words are needed, not your feelings. Customize the style, scene, decoration, etc., and be as detailed as possible without endings.",
+        "A superstar on stage.",
+        50,
+        0.8,
+        "You are an AI prompt word engineer. Use the provided image to create a beautiful composition. Only the prompt words are needed, not your feelings. Customize the style, scene, decoration, etc., and be as detailed as possible without endings.",
+        "What's in this image?",
+        "Pass",
+        "",
+        "Pass",
+        ""
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        903,
+        -24
+      ],
+      "size": {
+        "0": 210,
+        "1": 46
+      },
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 52,
+          "slot_index": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9,
+            175,
+            193
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 17,
+      "type": "LoadImage",
+      "pos": [
+        -381,
+        491
+      ],
+      "size": {
+        "0": 248.69094848632812,
+        "1": 436.4830627441406
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            125
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "d7d559bfe16f48e09a9b5b0d348d4042.jpg",
+        "image"
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      4,
+      0,
+      3,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      5,
+      0,
+      3,
+      3,
+      "LATENT"
+    ],
+    [
+      7,
+      3,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      9,
+      8,
+      0,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      52,
+      30,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      125,
+      17,
+      0,
+      51,
+      0,
+      "IMAGE"
+    ],
+    [
+      160,
+      51,
+      0,
+      64,
+      0,
+      "*"
+    ],
+    [
+      175,
+      8,
+      0,
+      70,
+      0,
+      "IMAGE"
+    ],
+    [
+      181,
+      4,
+      1,
+      71,
+      0,
+      "CLIP"
+    ],
+    [
+      182,
+      51,
+      0,
+      71,
+      1,
+      "*"
+    ],
+    [
+      183,
+      71,
+      0,
+      3,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      184,
+      71,
+      1,
+      3,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      185,
+      71,
+      4,
+      60,
+      0,
+      "*"
+    ],
+    [
+      186,
+      71,
+      5,
+      59,
+      0,
+      "*"
+    ],
+    [
+      187,
+      71,
+      6,
+      31,
+      0,
+      "*"
+    ],
+    [
+      188,
+      70,
+      0,
+      72,
+      2,
+      "*"
+    ],
+    [
+      191,
+      72,
+      1,
+      73,
+      0,
+      "*"
+    ],
+    [
+      192,
+      71,
+      6,
+      72,
+      1,
+      "*"
+    ],
+    [
+      193,
+      8,
+      0,
+      72,
+      3,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.620921323059155,
+      "offset": [
+        451.8061769980261,
+        772.8364042864162
+      ]
+    }
+  },
+  "version": 0.4
+}

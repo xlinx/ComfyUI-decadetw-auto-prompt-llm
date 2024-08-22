@@ -325,10 +325,14 @@ class LLM_ALL:
             #https://docs.comfy.org/essentials/custom_node_more_on_inputs#hidden-inputs
             "hidden": {
             },
-            "optional": {"image_to_llm_vision": ("*",), },
+            "optional": {
+                "image_to_llm_vision": ("*",),
+            },
             "required": {
                 "clip": ("CLIP",),
                 # "image_to_llm_vision": ("STRING", {"multiline": True,}),
+                "llm_text_result_append_enabled": ([True, False],),
+                "llm_vision_result_append_enabled": ([True, False],),
 
                 "text_prompt_postive": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": dafault_user_prompt}),
@@ -347,7 +351,7 @@ class LLM_ALL:
 
                 # "llm_text_system_prompt": ("STRING", {"multiline": False, "default": dafault_llm_sys_prompt}),
                 # "llm_text_ur_prompt": ("STRING", {"multiline": False, "default": dafault_llm_user_prompt}),
-                "llm_text_result_append_enabled": ([True, False],),
+
 
                 "llm_text_system_prompt": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": dafault_llm_sys_prompt}),
@@ -356,7 +360,6 @@ class LLM_ALL:
 
                 "llm_vision_max_token": ("INT", {"default": 50, "min": 10, "max": 1024, "step": 1}),
                 "llm_vision_tempture": ("FLOAT", {"default": 0.8, "min": -2.0, "max": 2.0, "step": 0.01}),
-                "llm_vision_result_append_enabled": ([True, False],),
                 "llm_vision_system_prompt": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": dafault_llm_sys_prompt_vision}),
                 "llm_vision_ur_prompt": (

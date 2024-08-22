@@ -1,4 +1,4 @@
-# sd-webui-decadetw-auto-prompt-llm
+# ComfyUI-decadetw-auto-prompt-llm
 
 <hr/>
 <p align="center">

@@ -46,7 +46,7 @@ dafault_settings_llm_api_key = (
     "lm-studio")
 dafault_settings_llm_model_name = (
     "llama3.1")
-
+default_openai_echo = """{"id": "", "choices": [{"finish_reason": "stop", "index": 0, "logprobs": null, "message": {"content": "LLM SERVER not found", "refusal": null, "role": "assistant", "function_call": null, "tool_calls": null}}], "created": 0, "model": "x", "object": "x", "service_tier": null, "system_fingerprint": null, "usage": {"completion_tokens": 0, "prompt_tokens": 0, "total_tokens": 0}}"""
 client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
 llm_history_array = []
 llm_history_array_eye = []
@@ -103,14 +103,18 @@ def call_llm_text(clip,
             temperature=llm_text_tempture,
 
         )
+        result_text = completion.choices[0].message.content
     except OpenAIError as e:
         llm_history_array.append([e.message, e.message, e.message, e.message])
-        return e.message, llm_history_array
+        result_text = "[Auto-LLM][OpenAILib][OpenAIError]Missing LLM Server?"
+        # completion = default_openai_completion_class
+        # completion = dict_2_class_pass()
+        # completion.__dict__.update(json.loads(default_openai_echo))
+        log.warning("[Auto-LLM][OpenAILib][OpenAIError]Missing LLM Server?")
 
-    result_text = completion.choices[0].message.content
+    # log.warning("[Auto-LLM][OpenAILib][completion]" + json.dumps(completion, default=vars))
 
     result_text = result_text.replace('\n', ' ')
-
     do_subprocess_action(llm_post_action_cmd)
     return result_text
 
@@ -178,7 +182,7 @@ def call_llm_eye_open(clip,
     # log.warning("[][Auto-llm-vision][Exception]",e)
 
     try:
-        check_api_uri(llm_apiurl, llm_apikey,client)
+        check_api_uri(llm_apiurl, llm_apikey, client)
 
         completion = client.chat.completions.create(
             model=f"{llm_api_model_name}",
@@ -203,17 +207,15 @@ def call_llm_eye_open(clip,
             max_tokens=llm_vision_max_token,
             temperature=llm_vision_tempture,
         )
-
+        result_vision = completion.choices[0].message.content
     except OpenAIError as e:
-        log.error(f"[][][call_llm_eye_open]Model Error: {e.message}")
         llm_history_array.append([e.message, e.message, e.message, e.message])
-        return e.message
+        result_vision = "[Auto-LLM][OpenAILib][OpenAIError]Missing LLM Server?"
+        # completion = dict_2_class_pass()
+        # completion.__dict__.update(json.loads(default_openai_echo))
+        # log.warning("[Auto-LLM][OpenAILib][OpenAIError] Load default_openai_echo")
 
-    # for chunk in completion:
-    #     if chunk.choices[0].delta.content:
-    #         result = chunk.choices[0].delta.content
-    # print(chunk.choices[0].delta.content, end="", flush=True)
-    result_vision = completion.choices[0].message.content
+    # log.warning("[Auto-LLM][OpenAILib][completion]" + json.dumps(completion, default=vars))
     result_vision = result_vision.replace('\n', ' ')
     result_translate = "wawa"
 
@@ -228,9 +230,8 @@ def call_llm_eye_open(clip,
 
 
 def do_subprocess_action(llm_post_action_cmd):
-    # if llm_post_action_cmd.__len__() <= 0:
-    return ""
-
+    if len(llm_post_action_cmd) <= 1:
+        return ""
     p = subprocess.Popen(llm_post_action_cmd.split(" "), text=True, shell=True, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
     (out, err) = p.communicate()
@@ -296,6 +297,20 @@ def call_llm_all(clip,
             result_text, result_vision, result_text_vision,)
 
 
+class dict_2_class:
+    def __init__(self, data):
+        for key, value in data.items():
+            setattr(self, key, value)
+
+
+class dict_2_class_pass:
+    pass
+
+
+class default_openai_completion_class:
+    choices = [{"message": {"content": "Missing LLM Server"}}]
+
+
 class EnumCmdReturnType(enum.Enum):
     PASS = 'Pass'
     JUST_CALL = 'just-call'
@@ -351,7 +366,6 @@ class LLM_ALL:
 
                 # "llm_text_system_prompt": ("STRING", {"multiline": False, "default": dafault_llm_sys_prompt}),
                 # "llm_text_ur_prompt": ("STRING", {"multiline": False, "default": dafault_llm_user_prompt}),
-
 
                 "llm_text_system_prompt": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": dafault_llm_sys_prompt}),

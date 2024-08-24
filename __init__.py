@@ -24,8 +24,8 @@ from .auto_prompt_llm import *
 
 NODE_CLASS_MAPPINGS = {
     "Auto-LLM-Text-Vision": LLM_ALL,
-    "Auto-LLM-Text": LLM_ALL,
-    "Auto-LLM-Vision": LLM_ALL,
+    "Auto-LLM-Text": LLM_TEXT,
+    "Auto-LLM-Vision": LLM_VISION,
 }
 # WEB_DIRECTORY = "./js"
 # __all__ = ["NODE_CLASS_MAPPINGS", "WEB_DIRECTORY"]

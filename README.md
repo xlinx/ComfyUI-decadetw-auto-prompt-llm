@@ -143,6 +143,9 @@
         <td colspan="2"><img src="images/rm_use2.png"></img></td>
      </tr>
     <tr>
+        <td colspan="2"><img src="images/rm_use3.png"></img></td>
+     </tr>
+    <tr>
         <td colspan="2">
             <b style="font-size:20px">ComfyUI Manager | search keyword: auto</b>
         </td>

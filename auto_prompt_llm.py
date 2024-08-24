@@ -62,7 +62,7 @@ def image_to_base64(image):
     pli_image.save(image_data, format='PNG', pnginfo=None)
     image_data_bytes = image_data.getvalue()
     encoded_image = "data:image/png;base64," + base64.b64encode(image_data_bytes).decode('utf-8')
-    log.warning("[][image_to_base64][]"+encoded_image)
+    # log.warning("[][image_to_base64][]"+encoded_image)
     return encoded_image
 
 
@@ -307,7 +307,7 @@ class LLM_TEXT:
         return {
             #https://docs.comfy.org/essentials/custom_node_more_on_inputs#hidden-inputs
             "hidden": {
-                "image_to_llm_vision": ("*",),
+                "image_to_llm_vision": ("IMAGE",),
                 "llm_vision_max_token": ("INT", {"default": 50, "min": 10, "max": 1024, "step": 1}),
                 "llm_vision_tempture": ("FLOAT", {"default": 0.8, "min": -2.0, "max": 2.0, "step": 0.01}),
                 "llm_vision_system_prompt": (
@@ -406,11 +406,12 @@ class LLM_VISION:
                 "llm_text_result_append_enabled": ([True, False],),
             },
             "optional": {
-                "image_to_llm_vision": ("*",),
+
             },
             "required": {
+
                 "clip": ("CLIP",),
-                # "image_to_llm_vision": ("STRING", {"multiline": True,}),
+                "image_to_llm_vision": ("IMAGE",),
 
                 "llm_vision_result_append_enabled": ([True, False],),
 

@@ -1,0 +1,14 @@
+[project]
+name = "comfyui-decadetw-auto-prompt-llm"
+description = "NODES: Auto-LLM-Text-Vision, Auto-LLM-Text, Auto-LLM-Vision"
+version = "1.0.0"
+license = {file = "LICENSE"}
+
+[project.urls]
+Repository = "https://github.com/xlinx/ComfyUI-decadetw-auto-prompt-llm"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-decadetw-auto-prompt-llm"
+Icon = ""

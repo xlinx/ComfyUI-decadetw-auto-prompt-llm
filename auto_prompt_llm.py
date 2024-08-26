@@ -3,6 +3,7 @@ import enum
 import io
 import json
 import os
+import random
 import subprocess
 import logging
 import zlib
@@ -521,6 +522,12 @@ class LLM_VISION:
 
 
 class LLM_ALL:
+    @classmethod
+    def IS_CHANGED(s,is_trigger_every_generated):
+        if is_trigger_every_generated:
+            return  random.random()
+        else:
+            return 0
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -534,6 +541,8 @@ class LLM_ALL:
             "required": {
                 "clip": ("CLIP",),
                 "image_to_llm_vision": ("IMAGE",),
+                "is_trigger_every_generated": ([True, False],),
+
                 # "image_to_llm_vision": ("STRING", {"multiline": True,}),
                 "llm_text_result_append_enabled": ([True, False],),
                 "llm_vision_result_append_enabled": ([True, False],),
@@ -590,7 +599,7 @@ class LLM_ALL:
     # def IS_CHANGED(s):
     #     return True
 
-    def call_all(self, clip=None,
+    def call_all(self, is_trigger_every_generated=None, clip=None,
                  text_prompt_postive=None, text_prompt_negative=None,
                  llm_apiurl=None, llm_apikey=None, llm_api_model_name=None,
                  llm_text_max_token=None, llm_text_tempture=None, llm_text_result_append_enabled=None,

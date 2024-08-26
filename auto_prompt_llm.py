@@ -11,8 +11,9 @@ from json.decoder import JSONArray
 
 import PIL.Image
 import numpy as np
+import requests
 from PIL.PngImagePlugin import iTXt
-from openai import OpenAI, OpenAIError
+#rom openai import OpenAI, OpenAIError
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -41,23 +42,32 @@ dafault_llm_user_prompt_vision = (
 dafault_llm_user_prompt = (
     "A superstar on stage.")
 dafault_settings_llm_url = (
-    "http://localhost:1234/v1")
+    "http://localhost:1234/v1/chat/completions")
 dafault_settings_llm_api_key = (
     "lm-studio")
 dafault_settings_llm_model_name = (
     "llama3.1")
 default_openai_echo = """{"id": "", "choices": [{"finish_reason": "stop", "index": 0, "logprobs": null, "message": {"content": "LLM SERVER not found", "refusal": null, "role": "assistant", "function_call": null, "tool_calls": null}}], "created": 0, "model": "x", "object": "x", "service_tier": null, "system_fingerprint": null, "usage": {"completion_tokens": 0, "prompt_tokens": 0, "total_tokens": 0}}"""
-client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
 llm_history_array = []
 llm_history_array_eye = []
 
+
+# base_url = "http://localhost:1234/v1"
+# api_key = "lm-studio"
+
+
+# client = OpenAI(base_url=base_url, api_key=api_key)
+# headers = {
+#          'Content-Type': 'application/json',
+#          'Authorization': f'Bearer {api_key}'
+# }
 
 def tensor_to_pil(image):
     return Image.fromarray(np.clip(255. * image.cpu().numpy().squeeze(), 0, 255).astype(np.uint8))
 
 
 def image_to_base64(image):
-    pli_image=tensor_to_pil(image)
+    pli_image = tensor_to_pil(image)
     image_data = io.BytesIO()
     pli_image.save(image_data, format='PNG', pnginfo=None)
     image_data_bytes = image_data.getvalue()
@@ -73,12 +83,19 @@ def encodeX(clip, text):
     return [[cond, output]]
 
 
-def check_api_uri(llm_apiurl, llm_apikey, clientx):
-    try:
-        if clientx.base_url != llm_apiurl or clientx.api_key != llm_apikey:
-            clientx = OpenAI(base_url=llm_apiurl, api_key=llm_apikey)
-    except OpenAIError as e:
-        log.warning(e)
+# def check_api_uri(llm_apiurl, llm_apikey):
+#     base_url = llm_apiurl
+#     api_key = llm_apikey
+
+
+# def check_api_uri(llm_apiurl, llm_apikey, clientx):
+#     base_url=llm_apiurl
+#     api_key=llm_apikey
+#     try:
+#         if clientx.base_url != llm_apiurl or clientx.api_key != llm_apikey:
+#             clientx = OpenAI(base_url=llm_apiurl, api_key=llm_apikey)
+#     except OpenAIError as e:
+#         log.warning(e)
 
 
 def print_obj_x(obj):
@@ -98,6 +115,7 @@ def call_llm_text(clip,
                   llm_before_action_cmd_feedback_type, llm_before_action_cmd,
                   llm_post_action_cmd_feedback_type, llm_post_action_cmd):
     llm_before_action_cmd_return_value = do_subprocess_action(llm_before_action_cmd)
+
     if EnumCmdReturnType.LLM_USER_PROMPT.value in llm_before_action_cmd_feedback_type:
         llm_text_ur_prompt += llm_before_action_cmd_return_value
 
@@ -105,21 +123,27 @@ def call_llm_text(clip,
         llm_text_ur_prompt = (llm_text_ur_prompt if llm_keep_your_prompt_ahead else "") + " " + \
                              llm_history_array[len(llm_history_array) - 1][0]
     try:
-        check_api_uri(llm_apiurl, llm_apikey, client)
-
-        completion = client.chat.completions.create(
-            model=f"{llm_api_model_name}",
-            messages=[
-                {"role": "system", "content": llm_text_system_prompt},
-                {"role": "user", "content": llm_text_ur_prompt}
-            ],
-            max_tokens=llm_text_max_token,
-            temperature=llm_text_tempture,
-
-        )
+        # check_api_uri(llm_apiurl, llm_apikey)
+        #result_text = completion.choices[0].message.content
+        completion = requests.post(llm_apiurl,
+                                   headers={
+                                       'Content-Type': 'application/json',
+                                       'Authorization': f'Bearer {llm_apikey}',
+                                   },
+                                   json={
+                                       'model': f'{llm_api_model_name}',
+                                       'messages': [
+                                           {'role': 'system', 'content': f'{llm_text_system_prompt}'},
+                                           {'role': 'user', 'content': f'{llm_text_ur_prompt}'}
+                                       ],
+                                       'max_tokens': f'{llm_text_max_token}',
+                                       'temperature': f'{llm_text_tempture}',
+                                   }
+                                   )
         result_text = completion.choices[0].message.content
-    except OpenAIError as e:
-        llm_history_array.append([e.message, e.message, e.message, e.message])
+    except Exception as e:
+        e = str(e)
+        llm_history_array.append([e, e, e, e])
         result_text = "[Auto-LLM][OpenAILib][OpenAIError]Missing LLM Server?"
         # completion = default_openai_completion_class
         # completion = dict_2_class_pass()
@@ -150,34 +174,53 @@ def call_llm_eye_open(clip,
         base64_image = f"data:image/jpeg;base64,{base64_image}"
 
     try:
-        check_api_uri(llm_apiurl, llm_apikey, client)
-
-        completion = client.chat.completions.create(
-            model=f"{llm_api_model_name}",
-            messages=[
-                {
-                    "role": "system",
-                    "content": f"{llm_vision_system_prompt}",
-                },
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": f"{llm_vision_ur_prompt}"},
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"{base64_image}"
-                            },
-                        },
-                    ],
-                }
-            ],
-            max_tokens=llm_vision_max_token,
-            temperature=llm_vision_tempture,
-        )
+        # check_api_uri(llm_apiurl, llm_apikey, client)
+        #
+        # completion = client.chat.completions.create(
+        #     model=f"{llm_api_model_name}",
+        #     messages=[
+        #         {
+        #             "role": "system",
+        #             "content": f"{llm_vision_system_prompt}",
+        #         },
+        #         {
+        #             "role": "user",
+        #             "content": [
+        #                 {"type": "text", "text": f"{llm_vision_ur_prompt}"},
+        #                 {
+        #                     "type": "image_url",
+        #                     "image_url": {
+        #                         "url": f"{base64_image}"
+        #                     },
+        #                 },
+        #             ],
+        #         }
+        #     ],
+        #     max_tokens=llm_vision_max_token,
+        #     temperature=llm_vision_tempture,
+        # )
+        completion = requests.post(llm_apiurl,
+                                   headers={
+                                       'Content-Type': 'application/json',
+                                       'Authorization': f'Bearer {llm_apikey}',
+                                   },
+                                   json={
+                                       'model': f'{llm_api_model_name}',
+                                       'messages': [
+                                           {'role': 'system', 'content': f'{llm_vision_system_prompt}'},
+                                           {'role': 'user', 'content': [
+                                               {'type': 'text', 'text': f'{llm_vision_ur_prompt}'},
+                                               {'type': 'image_url', 'image_url': {'url': f'{base64_image}'}}
+                                           ]}
+                                       ],
+                                       'max_tokens': f'{llm_text_max_token}',
+                                       'temperature': f'{llm_text_tempture}',
+                                   }
+                                   )
         result_vision = completion.choices[0].message.content
-    except OpenAIError as e:
-        llm_history_array.append([e.message, e.message, e.message, e.message])
+    except Exception as e:
+        e=str(e)
+        llm_history_array.append([e,e,e,e])
         result_vision = "[Auto-LLM][OpenAILib][OpenAIError]Missing LLM Server?"
         # completion = dict_2_class_pass()
         # completion.__dict__.update(json.loads(default_openai_echo))
@@ -486,7 +529,7 @@ class LLM_ALL:
             "hidden": {
             },
             "optional": {
-
+                # "trigger_any_type": ("IMAGE",),
             },
             "required": {
                 "clip": ("CLIP",),
@@ -547,16 +590,18 @@ class LLM_ALL:
     # def IS_CHANGED(s):
     #     return True
 
-    def call_all(self, clip,
-                 text_prompt_postive, text_prompt_negative,
-                 llm_apiurl, llm_apikey, llm_api_model_name,
-                 llm_text_max_token, llm_text_tempture, llm_text_result_append_enabled, llm_text_system_prompt,
-                 llm_text_ur_prompt,
-                 llm_vision_max_token, llm_vision_tempture, llm_vision_result_append_enabled, llm_vision_system_prompt,
-                 llm_vision_ur_prompt, image_to_llm_vision,
-                 llm_recursive_use, llm_keep_your_prompt_ahead,
-                 llm_before_action_cmd_feedback_type, llm_before_action_cmd,
-                 llm_post_action_cmd_feedback_type, llm_post_action_cmd):
+    def call_all(self, clip=None,
+                 text_prompt_postive=None, text_prompt_negative=None,
+                 llm_apiurl=None, llm_apikey=None, llm_api_model_name=None,
+                 llm_text_max_token=None, llm_text_tempture=None, llm_text_result_append_enabled=None,
+                 llm_text_system_prompt=None,
+                 llm_text_ur_prompt=None,
+                 llm_vision_max_token=None, llm_vision_tempture=None, llm_vision_result_append_enabled=None,
+                 llm_vision_system_prompt=None,
+                 llm_vision_ur_prompt=None, image_to_llm_vision=None,
+                 llm_recursive_use=None, llm_keep_your_prompt_ahead=None,
+                 llm_before_action_cmd_feedback_type=None, llm_before_action_cmd=None,
+                 llm_post_action_cmd_feedback_type=None, llm_post_action_cmd=None):
         return call_llm_all(clip,
                             text_prompt_postive, text_prompt_negative,
                             llm_apiurl, llm_apikey, llm_api_model_name,
@@ -567,4 +612,3 @@ class LLM_ALL:
                             llm_recursive_use, llm_keep_your_prompt_ahead,
                             llm_before_action_cmd_feedback_type, llm_before_action_cmd,
                             llm_post_action_cmd_feedback_type, llm_post_action_cmd)
-

@@ -11,9 +11,11 @@
 /    |    \  |  /|  | (  <_> ) |    |___|    |___/    Y    \
 \____|__  /____/ |__|  \____/  |_______ \_______ \____|__  /
         \/                             \/       \/       \/
-             · -—+ auto-prompt-llm-text-vision Extension for ComfyUI +—- ·
-             trigger more detail using AI render AI
-             https://decade.tw
+· -—+ auto-prompt-llm-text-vision Extension for ComfyUI +—- ·
+trigger more detail using AI render AI
+https://decade.tw
+https://docs.comfy.org/essentials/custom_node_more_on_inputs#prompt
+https://registry.comfy.org/nodes
 """
 
 from .auto_prompt_llm import *
@@ -26,6 +28,11 @@ NODE_CLASS_MAPPINGS = {
     "Auto-LLM-Text-Vision": LLM_ALL,
     "Auto-LLM-Text": LLM_TEXT,
     "Auto-LLM-Vision": LLM_VISION,
+}
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "Auto-LLM-Text-Vision": "✨ Auto-LLM-Text-Vision",
+    "Auto-LLM-Text":        "✨ Auto-LLM-Text",
+    "Auto-LLM-Vision":      "✨ Auto-LLM-Vision",
 }
 # WEB_DIRECTORY = "./js"
 # __all__ = ["NODE_CLASS_MAPPINGS", "WEB_DIRECTORY"]

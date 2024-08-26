@@ -1,8 +1,8 @@
 [project]
 name = "comfyui-decadetw-auto-prompt-llm"
 description = "NODES: Auto-LLM-Text-Vision, Auto-LLM-Text, Auto-LLM-Vision"
-version = "1.0.1"
-license = {file = "LICENSE"}
+version = "1.20240826.1"
+license = {text = "MIT License"}
 
 [project.urls]
 Repository = "https://github.com/xlinx/ComfyUI-decadetw-auto-prompt-llm"

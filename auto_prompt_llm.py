@@ -3,6 +3,8 @@ import enum
 import io
 import json
 import os
+import pprint
+
 import random
 import subprocess
 import logging
@@ -78,6 +80,7 @@ def image_to_base64(image):
 
 
 def encodeX(clip, text):
+    print("[][Auto-LLM][clip-encode-text] text=", text)
     tokens = clip.tokenize(text)
     output = clip.encode_from_tokens(tokens, return_pooled=True, return_dict=True)
     cond = output.pop("cond")
@@ -139,13 +142,16 @@ def call_llm_text(clip,
                                        ],
                                        'max_tokens': f'{llm_text_max_token}',
                                        'temperature': f'{llm_text_tempture}',
+                                       'stream': f'{False}',
                                    }
-                                   )
-        result_text = completion.choices[0].message.content
+                                   ).json()
+        # print(f'[][][]{completion}')
+        # pprint.pprint(completion)
+        result = completion['choices'][0]['message']['content']
     except Exception as e:
         e = str(e)
         llm_history_array.append([e, e, e, e])
-        result_text = "[Auto-LLM][OpenAILib][OpenAIError]Missing LLM Server?"
+        result = "[Auto-LLM][Result][Missing LLM-Text]" + e
         # completion = default_openai_completion_class
         # completion = dict_2_class_pass()
         # completion.__dict__.update(json.loads(default_openai_echo))
@@ -153,9 +159,9 @@ def call_llm_text(clip,
 
     # log.warning("[Auto-LLM][OpenAILib][completion]" + json.dumps(completion, default=vars))
 
-    result_text = result_text.replace('\n', ' ')
+    result = result.replace('\n', ' ')
     do_subprocess_action(llm_post_action_cmd)
-    return result_text
+    return result
 
 
 def call_llm_eye_open(clip,
@@ -216,19 +222,22 @@ def call_llm_eye_open(clip,
                                        ],
                                        'max_tokens': f'{llm_text_max_token}',
                                        'temperature': f'{llm_text_tempture}',
+                                       'stream': f'{False}',
                                    }
-                                   )
-        result_vision = completion.choices[0].message.content
+                                   ).json()
+        # print(f'[][][]{completion}')
+        # pprint.pprint(completion)
+        result = completion['choices'][0]['message']['content']
     except Exception as e:
-        e=str(e)
-        llm_history_array.append([e,e,e,e])
-        result_vision = "[Auto-LLM][OpenAILib][OpenAIError]Missing LLM Server?"
+        e = str(e)
+        llm_history_array.append([e, e, e, e])
+        result = "[Auto-LLM][Result][Missing LLM-Vision Module?]" + e
         # completion = dict_2_class_pass()
         # completion.__dict__.update(json.loads(default_openai_echo))
         # log.warning("[Auto-LLM][OpenAILib][OpenAIError] Load default_openai_echo")
 
     # log.warning("[Auto-LLM][OpenAILib][completion]" + json.dumps(completion, default=vars))
-    result_vision = result_vision.replace('\n', ' ')
+    result = result.replace('\n', ' ')
     result_translate = "wawa"
 
     llm_history_array.append([result_vision, llm_vision_system_prompt, llm_vision_ur_prompt, result_translate])
@@ -238,7 +247,7 @@ def call_llm_eye_open(clip,
 
     # do_subprocess_action(llm_post_action_cmd)
 
-    return result_vision
+    return result
 
 
 def do_subprocess_action(llm_post_action_cmd):
@@ -300,10 +309,9 @@ def call_llm_all(clip,
 
     result_text_vision = ",".join([text_prompt_postive, result_text, result_vision])
     encode_pos = encodeX(clip, result_text_vision)
-    log.warning("[][Auto-LLM][ LLM-Text-Answer] " + result_text)
-
-    log.warning("[][Auto-LLM][ LLM-Vision-Answer] " + result_vision)
-    log.warning("[][Auto-LLM][SD-PostivePrompt + LLM-Text-Vision-Answer] " + result_text_vision)
+    # log.warning("[][Auto-LLM][ LLM-Text-Answer] " + result_text)
+    # log.warning("[][Auto-LLM][ LLM-Vision-Answer] " + result_vision)
+    # log.warning("[][Auto-LLM][SD-PostivePrompt + LLM-Text-Vision-Answer] " + result_text_vision)
 
     return (encode_pos, encode_neg, text_prompt_postive, text_prompt_negative,
             result_text, result_vision, result_text_vision,)
@@ -523,9 +531,9 @@ class LLM_VISION:
 
 class LLM_ALL:
     @classmethod
-    def IS_CHANGED(s,is_trigger_every_generated):
+    def IS_CHANGED(s, is_trigger_every_generated):
         if is_trigger_every_generated:
-            return  random.random()
+            return random.random()
         else:
             return 0
 
@@ -620,4 +628,26 @@ class LLM_ALL:
                             llm_vision_system_prompt, llm_vision_ur_prompt, image_to_llm_vision,
                             llm_recursive_use, llm_keep_your_prompt_ahead,
                             llm_before_action_cmd_feedback_type, llm_before_action_cmd,
+
                             llm_post_action_cmd_feedback_type, llm_post_action_cmd)
+
+
+# Unit test
+if __name__ == "__main__":
+    node = LLM_ALL()
+    example_prompt = "Generate a random number using the input as seed"
+    example_any = 5
+    result = call_llm_text(clip=None,
+                           text_prompt_postive='1girl,', text_prompt_negative='',
+                           llm_apiurl='http://localhost:1234/v1/chat/completions', llm_apikey='lm-studio',
+                           llm_api_model_name='llama3.1',
+                           llm_text_max_token=50, llm_text_tempture=0.5, llm_text_result_append_enabled=True,
+                           llm_text_system_prompt='You are a prompt exper',
+                           llm_text_ur_prompt='a superman on stage',
+                           llm_vision_max_token=50, llm_vision_tempture=0.5, llm_vision_result_append_enabled=True,
+                           llm_vision_system_prompt='',
+                           llm_vision_ur_prompt='What is this?', image_to_llm_vision=None,
+                           llm_recursive_use=False, llm_keep_your_prompt_ahead=False,
+                           llm_before_action_cmd_feedback_type=(None,), llm_before_action_cmd='',
+                           llm_post_action_cmd_feedback_type=(None,), llm_post_action_cmd='')
+    print("Result:", result)

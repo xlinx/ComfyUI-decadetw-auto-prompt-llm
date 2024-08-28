@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-decadetw-auto-prompt-llm"
 description = "NODES: Auto-LLM-Text-Vision, Auto-LLM-Text, Auto-LLM-Vision"
-version = "1.20240827.3"
+version = "1.20240827.5"
 license = {text = "MIT License"}
 
 [project.urls]

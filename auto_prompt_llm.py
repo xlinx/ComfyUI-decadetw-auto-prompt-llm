@@ -218,12 +218,12 @@ def call_llm_eye_open(clip,
                                                {'type': 'image_url', 'image_url': {'url': f'{base64_image}'}}
                                            ]}
                                        ],
-                                       'max_tokens': f'{llm_text_max_token}',
-                                       'temperature': f'{llm_text_tempture}',
+                                       'max_tokens': f'{llm_vision_max_token}',
+                                       'temperature': f'{llm_vision_tempture}',
                                        'stream': f'{False}',
                                    }
                                    ).json()
-        # print(f'[][][]{completion}')
+        print(f'[][][]{completion}')
         # pprint.pprint(completion)
         result = completion['choices'][0]['message']['content']
     except Exception as e:
@@ -474,7 +474,7 @@ class LLM_VISION:
                 "llm_api_model_name": ("STRING", {"multiline": False, "default": "llama3.1"}),
 
                 "llm_vision_max_token": ("INT", {"default": 50, "min": 10, "max": 1024, "step": 1}),
-                "llm_vision_tempture": ("FLOAT", {"default": 0.8, "min": -2.0, "max": 2.0, "step": 0.01}),
+                "llm_vision_tempture": ("FLOAT", {"default": 0.2, "min": -2.0, "max": 2.0, "step": 0.01}),
                 "llm_vision_system_prompt": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": dafault_llm_sys_prompt_vision}),
                 "llm_vision_ur_prompt": (
@@ -575,7 +575,7 @@ class LLM_ALL:
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": dafault_llm_user_prompt}),
 
                 "llm_vision_max_token": ("INT", {"default": 50, "min": 10, "max": 1024, "step": 1}),
-                "llm_vision_tempture": ("FLOAT", {"default": 0.8, "min": -2.0, "max": 2.0, "step": 0.01}),
+                "llm_vision_tempture": ("FLOAT", {"default": 0.2, "min": -2.0, "max": 2.0, "step": 0.01}),
                 "llm_vision_system_prompt": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": dafault_llm_sys_prompt_vision}),
                 "llm_vision_ur_prompt": (

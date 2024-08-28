@@ -118,7 +118,7 @@ def call_llm_text(clip,
                   llm_recursive_use, llm_keep_your_prompt_ahead,
                   llm_before_action_cmd_feedback_type, llm_before_action_cmd,
                   llm_post_action_cmd_feedback_type, llm_post_action_cmd):
-    llm_before_action_cmd_return_value = do_subprocess_action(llm_before_action_cmd)
+    # llm_before_action_cmd_return_value = do_subprocess_action(llm_before_action_cmd)
 
     if EnumCmdReturnType.LLM_USER_PROMPT.value in llm_before_action_cmd_feedback_type:
         llm_text_ur_prompt += llm_before_action_cmd_return_value
@@ -156,11 +156,9 @@ def call_llm_text(clip,
         # completion = dict_2_class_pass()
         # completion.__dict__.update(json.loads(default_openai_echo))
         log.warning("[Auto-LLM][OpenAILib][OpenAIError]Missing LLM Server?")
-
     # log.warning("[Auto-LLM][OpenAILib][completion]" + json.dumps(completion, default=vars))
-
     result = result.replace('\n', ' ')
-    do_subprocess_action(llm_post_action_cmd)
+    # do_subprocess_action(llm_post_action_cmd)
     return result
 
 
@@ -238,13 +236,11 @@ def call_llm_eye_open(clip,
 
     # log.warning("[Auto-LLM][OpenAILib][completion]" + json.dumps(completion, default=vars))
     result = result.replace('\n', ' ')
-    result_translate = "wawa"
-
-    llm_history_array.append([result_vision, llm_vision_system_prompt, llm_vision_ur_prompt, result_translate])
-    if len(llm_history_array) > 3:
-        llm_history_array.remove(llm_history_array[0])
-    print("[][auto-llm][call_llm_eye_open] result_vision=", result_vision)
-
+    # result_translate = "wawa"
+    # llm_history_array.append([result, llm_vision_system_prompt, llm_vision_ur_prompt, result_translate])
+    # if len(llm_history_array) > 3:
+    #     llm_history_array.remove(llm_history_array[0])
+    # print("[][auto-llm][call_llm_eye_open] result_vision=", result_vision)
     # do_subprocess_action(llm_post_action_cmd)
 
     return result

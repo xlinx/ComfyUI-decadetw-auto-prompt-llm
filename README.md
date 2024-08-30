@@ -15,7 +15,15 @@
 
 <hr/>
 <p align="center">
-  <a href="https://github.com/feross/standard">
+<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxlinx%2Fsd-webui-decadetw-auto-prompt-llm&count_bg=%2379C83D&title_bg=%23555555&icon=codeforces.svg&icon_color=%23E7E7E7&title=sd-webui-decadetw-auto-prompt-llm&edge_flat=true" alt=""/>
+<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxlinx%2FComfyUI-decadetw-auto-prompt-llm&count_bg=%2379C83D&title_bg=%23555555&icon=codeforces.svg&icon_color=%23E7E7E7&title=ComfyUI-decadetw-auto-prompt-llm&edge_flat=true" alt=""/>
+</p>
+<p align="center">
+<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxlinx%2Fsd-webui-decadetw-auto-messaging-realtime&count_bg=%2379C83D&title_bg=%23555555&icon=codeforces.svg&icon_color=%23E7E7E7&title=sd-webui-decadetw-auto-messaging-realtime&edge_flat=true" alt=""/>
+<img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxlinx%2FComfyUI-decadetw-auto-messaging-realtime&count_bg=%2379C83D&title_bg=%23555555&icon=codeforces.svg&icon_color=%23E7E7E7&title=ComfyUI-decadetw-auto-messaging-realtime&edge_flat=true" alt=""/>
+</p>
+<p align="center">  
+<a href="https://github.com/feross/standard">
     <img src="https://img.shields.io/badge/code%20style-standard-green.svg?style=flat-square" alt="">
   </a>
   <a href="https://github.com/xlinx/sd-webui-decadetw-auto-prompt-llm/releases">
@@ -29,7 +37,7 @@
   </a>
 <a href="https://github.com/xlinx/sd-webui-decadetw-auto-prompt-llm/issues">
     <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square" alt="">
-</a>
+</a> 
 </p>
 
 #### Update Log

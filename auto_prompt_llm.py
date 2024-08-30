@@ -28,7 +28,7 @@ default_user_prompt = (
 default_llm_sys_prompt = (
     "You are an AI prompt word engineer. Use the provided keywords to create a beautiful composition. Only the prompt words are needed, not your feelings. Customize the style, scene, decoration, etc., and be as detailed as possible without endings.")
 default_llm_sys_prompt_vision = (
-    "You are an AI prompt word engineer. Use the provided image to create a beautiful composition. Only the prompt words are needed, not your feelings. Customize the style, scene, decoration, etc., and be as detailed as possible without endings.")
+    "This is a chat between a user and an assistant. The assistant is helping the user to describe an image.")
 default_llm_user_prompt_vision = (
     "What's in this image?")
 default_llm_user_prompt = (
@@ -142,8 +142,8 @@ def call_llm_all(clip,
         'temperature': f'{llm_text_tempture}',
         'stream': f'{False}',
     }
-
-    result_text = call_llm_mix(headers_x, json_x1, llm_apiurl)
+    if llm_vision_result_append_enabled or llm_text_result_append_enabled:
+        result_text = call_llm_mix(headers_x, json_x1, llm_apiurl)
 
     result_vision = ''
     if llm_vision_result_append_enabled:
@@ -242,7 +242,7 @@ class LLM_TEXT:
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_llm_sys_prompt_vision}),
                 "llm_vision_ur_prompt": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_llm_user_prompt_vision}),
-                "llm_vision_result_append_enabled": ([True, False],),
+                "llm_vision_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
             },
             "optional": {
 
@@ -250,13 +250,13 @@ class LLM_TEXT:
             "required": {
                 "clip": ("CLIP",),
                 # "image_to_llm_vision": ("STRING", {"multiline": True,}),
-                "llm_text_result_append_enabled": ([True, False],),
+                "llm_text_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
 
                 "text_prompt_postive": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_user_prompt}),
                 "text_prompt_negative": ("STRING", {"multiline": True, "dynamicPrompts": True}),
-                "llm_keep_your_prompt_ahead": ([True, False],),
-                "llm_recursive_use": ([False, True],),
+                "llm_keep_your_prompt_ahead": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+                "llm_recursive_use": ("BOOLEAN", {"default": False, "label_off": "OFF", "label_on": "ON"}),
 
                 "llm_apiurl": ("STRING", {"multiline": False, "default": default_settings_llm_url}),
                 "llm_apikey": ("STRING", {"multiline": False, "default": default_settings_llm_api_key}),
@@ -336,7 +336,7 @@ class LLM_VISION:
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_llm_user_prompt}),
                 "llm_text_max_token": ("INT", {"default": 50, "min": 10, "max": 1024, "step": 1}),
                 "llm_text_tempture": ("FLOAT", {"default": 0.3, "min": -2.0, "max": 2.0, "step": 0.01}),
-                "llm_text_result_append_enabled": ([True, False],),
+                "llm_text_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
             },
             "optional": {
 
@@ -346,13 +346,13 @@ class LLM_VISION:
                 "clip": ("CLIP",),
                 "image_to_llm_vision": ("IMAGE",),
 
-                "llm_vision_result_append_enabled": ([True, False],),
+                "llm_vision_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
 
                 "text_prompt_postive": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_user_prompt}),
                 "text_prompt_negative": ("STRING", {"multiline": True, "dynamicPrompts": True}),
-                "llm_keep_your_prompt_ahead": ([True, False],),
-                "llm_recursive_use": ([False, True],),
+                "llm_keep_your_prompt_ahead": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+                "llm_recursive_use": ("BOOLEAN", {"default": False, "label_off": "OFF", "label_on": "ON"}),
 
                 "llm_apiurl": ("STRING", {"multiline": False, "default": default_settings_llm_url}),
                 "llm_apikey": ("STRING", {"multiline": False, "default": default_settings_llm_api_key}),
@@ -430,17 +430,17 @@ class LLM_ALL:
             "required": {
                 "clip": ("CLIP",),
                 "image_to_llm_vision": ("IMAGE",),
-                "is_trigger_every_generated": ([True, False],),
+                "is_trigger_every_generated": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
 
                 # "image_to_llm_vision": ("STRING", {"multiline": True,}),
-                "llm_text_result_append_enabled": ([True, False],),
-                "llm_vision_result_append_enabled": ([True, False],),
+                "llm_text_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+                "llm_vision_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
 
                 "text_prompt_postive": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_user_prompt}),
                 "text_prompt_negative": ("STRING", {"multiline": True, "dynamicPrompts": True}),
-                "llm_keep_your_prompt_ahead": ([True, False],),
-                "llm_recursive_use": ([False, True],),
+                "llm_keep_your_prompt_ahead": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+                "llm_recursive_use": ("BOOLEAN", {"default": False, "label_off": "OFF", "label_on": "ON"}),
                 # "text_prompt_postive": ("CONDITIONING",),
                 # "text_prompt_negative": ("CONDITIONING",),
                 # "text_llm_prompt_postive": ("text_llm_prompt",),

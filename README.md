@@ -6,9 +6,13 @@
 * Auto msg to ur mobile  (LINE | Telegram | Discord)
   * SD-WEB-UI :https://github.com/xlinx/sd-webui-decadetw-auto-messaging-realtime
   * ComfyUI:  https://github.com/xlinx/ComfyUI-decadetw-auto-messaging-realtime
+* I'm SD-VJ. (share SD-generating-process in realtime by gpu) 
+    * SD-WEB-UI: https://github.com/xlinx/sd-webui-decadetw-spout-syphon-im-vj
+    * ComfyUI:   https://github.com/xlinx/ComfyUI-decadetw-spout-syphon-im-vj
 * CivitAI Info|discuss:
   * https://civitai.com/articles/6988/extornode-using-llm-trigger-more-detail-that-u-never-thought
   * https://civitai.com/articles/6989/extornode-sd-image-auto-msg-to-u-mobile-realtime
+  * https://civitai.com/articles/7090/share-sd-img-to-3rd-software-gpu-share-memory-realtime-spout-or-syphon
 <hr/>
 
 # SD-WEB-UI | ComfyUI | decadetw-Auto-Prompt-LLM-Vision
@@ -49,7 +53,8 @@
       * ex: Chinese. It's just for your reference, which won't affect SD.
   * [add|20240808] | 🟠 Before and After script | exe-command
   * [add|20240808] | 🟠 release LLM VRAM everytimes
-
+  * [20250120] add serial chat-like for deep seek R1 model
+![LLM-Text-Chat.png](images/LLM-Text-Chat.png)
 ## Motivation💡
 * Call LLM       : auto prompt for batch generate images 
 * Call LLM-Vision: auto prompt for batch generate images

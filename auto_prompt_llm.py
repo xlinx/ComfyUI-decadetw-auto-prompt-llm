@@ -20,7 +20,7 @@ extra_networks_symbol = '\U0001F3B4'  # 🎴
 switch_values_symbol = '\U000021C5'  # ⇅
 restore_progress_symbol = '\U0001F300'  # 🌀
 detect_image_size_symbol = '\U0001F4D0'  # 📐
-log = logging.getLogger("[auto-llm]")
+log = logging.getLogger("[auto-llm ]")
 # log.setLevel(logging.INFO)
 # Logging
 default_user_prompt = (
@@ -83,7 +83,11 @@ def call_llm_mix(headers_x, json_str_x, llm_apiurl):
         # print(f'[][][]{completion}')
         print('call_llm_mix')
         pprint.pprint(completion)
-        result_mix = completion['choices'][0]['message']['content']
+        if "chat" in llm_apiurl:
+            result_mix = completion['choices'][0]['message']['content']
+        else:
+            result_mix = completion['choices'][0]['text']
+        # result_mix = completion['choices'][0]['message']['content']
     except Exception as e:
         e = str(e)
         llm_history_array.append([e, e, e, e])
@@ -134,13 +138,16 @@ def call_llm_all(clip,
     result_text = ''
     json_x1 = {
         'model': f'{llm_api_model_name}',
+        'prompt': f'{llm_text_ur_prompt}',
         'messages': [
             {'role': 'system', 'content': f'{llm_text_system_prompt}'},
+            {'role': 'assistant', 'content': f''},
+
             {'role': 'user', 'content': f'{llm_text_ur_prompt}'}
         ],
         'max_tokens': f'{llm_text_max_token}',
         'temperature': f'{llm_text_tempture}',
-        'stream': f'{False}',
+        'stream': False,
     }
     if llm_vision_result_append_enabled or llm_text_result_append_enabled:
         result_text = call_llm_mix(headers_x, json_x1, llm_apiurl)
@@ -150,6 +157,7 @@ def call_llm_all(clip,
         base64_image = image_to_base64(image_to_llm_vision)
         json_x2 = {
             'model': f'{llm_api_model_name}',
+            'prompt': f'{llm_vision_ur_prompt}',
             'messages': [
                 {'role': 'system', 'content': f'{llm_vision_system_prompt}'},
                 {'role': 'user', 'content': [
@@ -159,7 +167,7 @@ def call_llm_all(clip,
             ],
             'max_tokens': f'{llm_vision_max_token}',
             'temperature': f'{llm_vision_tempture}',
-            'stream': f'{False}',
+            'stream': False,
         }
         result_vision = call_llm_mix(headers_x, json_x2, llm_apiurl)
 

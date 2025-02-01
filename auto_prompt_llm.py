@@ -232,13 +232,14 @@ class AnyTypeX(str):
         return False
 
 
-class LLM_TEXT:
+class LLM_CHAT:
     @classmethod
     def IS_CHANGED(s, is_trigger_every_generated):
         if is_trigger_every_generated:
             return random.random()
         else:
             return 0
+
     @classmethod
     def INPUT_TYPES(cls):
         return {  #https://docs.comfy.org/essentials/custom_node_more_on_inputs#hidden-inputs
@@ -250,7 +251,104 @@ class LLM_TEXT:
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_llm_sys_prompt_vision}),
                 "llm_vision_ur_prompt": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_llm_user_prompt_vision}),
-                "llm_vision_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+                "llm_vision_result_append_enabled": (
+                    "BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+            },
+            "optional": {
+
+            },
+            "required": {
+                "clip": ("CLIP",),
+                # "image_to_llm_vision": ("STRING", {"multiline": True,}),
+                "llm_text_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+
+                "text_prompt_postive": (
+                    "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_user_prompt}),
+                "text_prompt_negative": ("STRING", {"multiline": True, "dynamicPrompts": True}),
+                "llm_keep_your_prompt_ahead": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+                "llm_recursive_use": ("BOOLEAN", {"default": False, "label_off": "OFF", "label_on": "ON"}),
+
+                "llm_apiurl": ("STRING", {"multiline": False, "default": default_settings_llm_url}),
+                "llm_apikey": ("STRING", {"multiline": False, "default": default_settings_llm_api_key}),
+                "llm_api_model_name": ("STRING", {"multiline": False, "default": "llama3.1"}),
+                "llm_text_max_token": ("INT", {"default": 50, "min": 10, "max": 1024, "step": 1}),
+                "llm_text_tempture": ("FLOAT", {"default": 0.3, "min": -2.0, "max": 2.0, "step": 0.01}),
+
+                # "llm_text_system_prompt": ("STRING", {"multiline": False, "default": dafault_llm_sys_prompt}),
+                # "llm_text_ur_prompt": ("STRING", {"multiline": False, "default": dafault_llm_user_prompt}),
+
+                "llm_text_system_prompt": (
+                    "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_llm_sys_prompt}),
+                "llm_text_ur_prompt": (
+                    "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_llm_user_prompt}),
+
+                "llm_before_action_cmd_feedback_type": (EnumCmdReturnType.values(),),
+                "llm_before_action_cmd": ("STRING", {"multiline": False, "default": ""}),
+                "llm_post_action_cmd_feedback_type": (EnumCmdReturnType.values(),),
+                "llm_post_action_cmd": (
+                    "STRING", {"multiline": False,  #curl http://localhost:11434/api/generate -d '{"keep_alive": 0}'
+                               "default": ""}),
+
+            }
+        }
+
+    RETURN_TYPES = ("CONDITIONING", "CONDITIONING", "STRING", "STRING", "STRING", "STRING", "STRING")
+    RETURN_NAMES = ("postive", "negative", "orignal-postive", "orignal-negative",
+                    "🌀LLM-Text",
+                    "🌀LLM-Vision",
+                    "🌀postive+LLM-Text+LLM-Vision")
+    FUNCTION = "call_all"
+    CATEGORY = "🧩 Auto-Prompt-LLM"
+
+    def call_all(self, clip,
+                 text_prompt_postive, text_prompt_negative,
+                 llm_apiurl, llm_apikey, llm_api_model_name,
+                 llm_text_max_token, llm_text_tempture, llm_text_result_append_enabled, llm_text_system_prompt,
+                 llm_text_ur_prompt,
+                 # llm_vision_max_token, llm_vision_tempture, llm_vision_system_prompt,
+                 # llm_vision_ur_prompt, image_to_llm_vision, llm_vision_result_append_enabled,
+                 llm_recursive_use, llm_keep_your_prompt_ahead,
+                 llm_before_action_cmd_feedback_type, llm_before_action_cmd,
+                 llm_post_action_cmd_feedback_type, llm_post_action_cmd):
+        image_to_llm_vision = None
+        llm_vision_max_token = None
+        llm_vision_tempture = None
+        llm_vision_system_prompt = None
+        llm_vision_ur_prompt = None
+        llm_vision_result_append_enabled = False
+        return call_llm_all(clip,
+                            text_prompt_postive, text_prompt_negative,
+                            llm_apiurl, llm_apikey, llm_api_model_name,
+                            llm_text_max_token, llm_text_tempture, llm_text_result_append_enabled,
+                            llm_text_system_prompt, llm_text_ur_prompt,
+                            llm_vision_max_token, llm_vision_tempture, llm_vision_result_append_enabled,
+                            llm_vision_system_prompt, llm_vision_ur_prompt, image_to_llm_vision,
+                            llm_recursive_use, llm_keep_your_prompt_ahead,
+                            llm_before_action_cmd_feedback_type, llm_before_action_cmd,
+                            llm_post_action_cmd_feedback_type, llm_post_action_cmd)
+
+
+class LLM_TEXT:
+    @classmethod
+    def IS_CHANGED(s, is_trigger_every_generated):
+        if is_trigger_every_generated:
+            return random.random()
+        else:
+            return 0
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {  #https://docs.comfy.org/essentials/custom_node_more_on_inputs#hidden-inputs
+            "hidden": {
+                "image_to_llm_vision": ("IMAGE",),
+                "llm_vision_max_token": ("INT", {"default": 50, "min": 10, "max": 1024, "step": 1}),
+                "llm_vision_tempture": ("FLOAT", {"default": 0.8, "min": -2.0, "max": 2.0, "step": 0.01}),
+                "llm_vision_system_prompt": (
+                    "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_llm_sys_prompt_vision}),
+                "llm_vision_ur_prompt": (
+                    "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_llm_user_prompt_vision}),
+                "llm_vision_result_append_enabled": (
+                    "BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
             },
             "optional": {
 
@@ -333,6 +431,7 @@ class LLM_VISION:
             return random.random()
         else:
             return 0
+
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -354,7 +453,8 @@ class LLM_VISION:
                 "clip": ("CLIP",),
                 "image_to_llm_vision": ("IMAGE",),
 
-                "llm_vision_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+                "llm_vision_result_append_enabled": (
+                    "BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
 
                 "text_prompt_postive": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_user_prompt}),
@@ -442,7 +542,8 @@ class LLM_ALL:
 
                 # "image_to_llm_vision": ("STRING", {"multiline": True,}),
                 "llm_text_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
-                "llm_vision_result_append_enabled": ("BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
+                "llm_vision_result_append_enabled": (
+                    "BOOLEAN", {"default": True, "label_off": "OFF", "label_on": "ON"}),
 
                 "text_prompt_postive": (
                     "STRING", {"multiline": True, "dynamicPrompts": True, "default": default_user_prompt}),

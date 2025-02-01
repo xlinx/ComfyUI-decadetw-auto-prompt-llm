@@ -25,13 +25,15 @@ from .auto_prompt_llm import *
 #     launch.run_pip(f"install OpenAI", "OpenAI")
 
 NODE_CLASS_MAPPINGS = {
+    "Auto-LLM-Chat": LLM_CHAT,
     "Auto-LLM-Text-Vision": LLM_ALL,
     "Auto-LLM-Text": LLM_TEXT,
     "Auto-LLM-Vision": LLM_VISION,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "Auto-LLM-Text-Vision": "✨ Auto-LLM-Text-Vision",
+    "Auto-LLM-Chat":        "✨ Auto-LLM-Chat",
     "Auto-LLM-Text":        "✨ Auto-LLM-Text",
+    "Auto-LLM-Text-Vision": "✨ Auto-LLM-Text-Vision",
     "Auto-LLM-Vision":      "✨ Auto-LLM-Vision",
 }
 # WEB_DIRECTORY = "./js"

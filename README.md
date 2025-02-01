@@ -44,6 +44,12 @@
 </a> 
 </p>
 
+## Usage - for ComfyUI user
+
+* Using LLM just-1-node.
+![autoLLM_flux_example.png](images/autoLLM_flux_example.png)
+
+
 #### Update Log
   * [add|20240730] | 🟢 LLM Recursive Prompt
   * [add|20240730] | 🟢 Keep ur prompt ahead each request
@@ -61,7 +67,7 @@
 * Image will get more details that u never though before.
 * prompt detail is important
 
-## Usage
+
 
 #### LLM-Text
 * batch image generate with LLM
